@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CROMI - Sistema de Pago Inteligente</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">CROMI</div>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#beneficios">Beneficios</a>
+            <a href="#como-funciona">¿Cómo Funciona?</a>
+            <a href="#contacto">Contacto</a>
+            <a href="login.html" class="btn-login">Iniciar Sesión</a>
+        </nav>
+        <div class="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>CROMI</h1>
+                    <h2>El futuro del transporte público en Santa Cruz</h2>
+                    <p>Sistema de pago inteligente que revoluciona la experiencia de viajar en micros. Rápido, seguro y conveniente.</p>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn-primary">Comenzar Ahora</a>
+                        <a href="#como-funciona" class="btn-secondary">Ver Demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Beneficios Section -->
+        <section id="beneficios" class="benefits">
+            <div class="container">
+                <h2>Beneficios para Todos</h2>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">👥</div>
+                        <h3>Para Usuarios</h3>
+                        <ul>
+                            <li>Pago rápido sin efectivo</li>
+                            <li>Control total de gastos</li>
+                            <li>Recarga desde tu celular</li>
+                            <li>Historial de viajes</li>
+                            <li>Sin preocuparte por cambio</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🚌</div>
+                        <h3>Para Conductores</h3>
+                        <ul>
+                            <li>Menos manejo de efectivo</li>
+                            <li>Reducción de robos</li>
+                            <li>Viajes más rápidos</li>
+                            <li>Control automático de pagos</li>
+                            <li>Reportes detallados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cómo Funciona Section -->
+        <section id="como-funciona" class="how-it-works">
+            <div class="container">
+                <h2>¿Cómo Funciona CROMI?</h2>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Regístrate</h3>
+                        <p>Crea tu cuenta CROMI en minutos</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Ve los movimiento</h3>
+                        <p>Puedes dar seguimiento a los pagos</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Cobra rápido</h3>
+                        <p>Usa el NFC de tu celular para cobrar el instante</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <h2>¿Listo para Empezar?</h2>
+                <p>Únete a la revolución del transporte público en Santa Cruz</p>
+                <a href="login.html" class="btn-primary">Crear Cuenta Gratis</a>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CROMI</h3>
+                    <p>Transformando el transporte público en Santa Cruz de la Sierra</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>Email: danielcrackvz@gmail.com</p>
+                    <p>Teléfono: +591 78572424</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Síguenos</h4>
+                    <p>Facebook | Instagram | Twitter</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CROMI. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const nav = document.querySelector('nav');
+        
+        mobileMenu.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

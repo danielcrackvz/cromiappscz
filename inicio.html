@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CROMI - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #269b38;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+    }
+
+    .dashboard-header {
+      padding: 20px 30px;
+      background: #2f8841;
+      border-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .stats-grid {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+.stat-card {
+  background: rgb(12, 148, 46);
+  padding: 20px; /* más espacio interno */
+  border-radius: 15px; /* bordes más suaves */
+  text-align: center;
+  flex: 1;
+  margin: 0 10px; /* más separación entre tarjetas */
+  min-height: 150px; /* altura mínima para uniformidad */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgb(255, 255, 255); /* sombra más profesional */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* efecto hover */
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgb(255, 255, 255);
+}
+
+.stat-card h2 {
+  font-size: 2rem; /* números más grandes */
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.stat-card p {
+  font-size: 1rem;
+  color: #ffffff;
+}
+    .stat-value { font-size: 1.2rem; font-weight: bold; }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .chart-container, .payments-container {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgb(255, 255, 255);
+      height: calc(100% - 20px);
+      overflow: auto;
+    }
+
+    .payments-table {
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 5px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 5px;
+      font-size: 0.8rem;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- HEADER -->
+    <div class="dashboard-header">
+  <h1 style="margin:0; font-size:1.2rem;">Panel de Control - CROMI</h1>
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <span>Julio Caceres Veizaga</span>
+    <a href="index.html" class="btn-cerrar-sesion">Cerrar sesión</a>
+  </div>
+</div>
+
+    <!-- MAIN -->
+    <div>
+      <div class="stats-grid">
+        <div class="stat-card"><h3>Hoy</h3><p class="stat-value" id="ingresosHoy">Bs. 130.00</p></div>
+        <div class="stat-card"><h3>Semana</h3><p class="stat-value" id="ingresosSemana">Bs. 960.00</p></div>
+        <div class="stat-card"><h3>Mes</h3><p class="stat-value" id="ingresosMes">Bs. 3040.00</p></div>
+        <div class="stat-card"><h3>Micros</h3><p class="stat-value">3</p></div>
+      </div>
+
+      <div class="main-grid">
+        <!-- Gráfico -->
+        <div class="chart-container">
+          <h3 style="margin:0;">Ingresos</h3>
+          <canvas id="incomeChart" height="120"></canvas>
+        </div>
+
+        <!-- Transacciones -->
+        <div class="payments-container">
+          <h3 style="margin:0;">Transacciones</h3>
+          <div class="payments-table" id="tablaTransacciones"></div>
+        </div>
+        <div class="export-buttons">
+  <button class="btn-export btn-pdf" onclick="exportarPDF()">
+    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+    </svg>
+    Exportar PDF
+  </button>
+  
+  <button class="btn-export btn-excel" onclick="exportarExcel()">
+    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+    </svg>
+    Exportar Excel
+  </button>
+</div>
+
+<!-- Agregar las librerías necesarias en el <head>: -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// Agregar estas funciones al final de tu script existente:
+
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Título del documento
+  doc.setFontSize(20);
+  doc.text('CROMI - Reporte de Movimientos', 20, 20);
+  
+  doc.setFontSize(12);
+  doc.text('Sistema de Pago Inteligente', 20, 30);
+  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 40);
+  doc.text('Usuario: Julio Caceres Veizaga', 20, 50);
+
+  // Preparar datos de las transacciones
+  const tableData = transaccionesSimuladas.map(tx => [
+    new Date(tx.fecha).toLocaleDateString(),
+    new Date(tx.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+    `Bs. ${tx.monto.toFixed(2)}`,
+    tx.estado
+  ]);
+
+  // Crear tabla
+  doc.autoTable({
+    head: [['Fecha', 'Hora', 'Monto', 'Estado']],
+    body: tableData,
+    startY: 70,
+    styles: {
+      fontSize: 10,
+      cellPadding: 3
+    },
+    headStyles: {
+      fillColor: [45, 90, 61], // Verde CROMI
+      textColor: 255
+    },
+    alternateRowStyles: {
+      fillColor: [248, 249, 250]
+    }
+  });
+
+  // Resumen
+  const finalY = doc.lastAutoTable.finalY + 20;
+  doc.setFontSize(14);
+  doc.text(`Total Hoy: Bs. 92.00`, 20, finalY);
+  doc.text(`Total Semana: Bs. 480.00`, 20, finalY + 10);
+  doc.text(`Total Mes: Bs. 1,230.00`, 20, finalY + 20);
+
+  // Descargar
+  doc.save(`CROMI_Movimientos_${new Date().toLocaleDateString()}.pdf`);
+}
+
+function exportarExcel() {
+  // Preparar datos para Excel
+  const datosExcel = transaccionesSimuladas.map(tx => ({
+    'Fecha': new Date(tx.fecha).toLocaleDateString(),
+    'Hora': new Date(tx.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+    'Monto (Bs.)': tx.monto.toFixed(2),
+    'Estado': tx.estado
+  }));
+
+  // Agregar resumen
+  datosExcel.push({});
+  datosExcel.push({ 'Fecha': 'RESUMEN', 'Hora': '', 'Monto (Bs.)': '', 'Estado': '' });
+  datosExcel.push({ 'Fecha': 'Total Hoy', 'Hora': '', 'Monto (Bs.)': '92.00', 'Estado': '' });
+  datosExcel.push({ 'Fecha': 'Total Semana', 'Hora': '', 'Monto (Bs.)': '480.00', 'Estado': '' });
+  datosExcel.push({ 'Fecha': 'Total Mes', 'Hora': '', 'Monto (Bs.)': '1230.00', 'Estado': '' });
+
+  // Crear libro de Excel
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(datosExcel);
+  
+  XLSX.utils.book_append_sheet(wb, ws, "Movimientos CROMI");
+
+  // Descargar
+  XLSX.writeFile(wb, `CROMI_Movimientos_${new Date().toLocaleDateString()}.xlsx`);
+}
+</script>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      &copy; 2025 CROMI - Sistema de Pago Inteligente
+    </footer>
+  </div>
+
+<script>
+  const transaccionesSimuladas = [
+    {fecha: "2025-08-31T14:25:00", monto: 2.30, estado: "Completado"},
+    {fecha: "2025-08-31T14:18:00", monto: 2.30, estado: "Completado"},
+    {fecha: "2025-08-31T14:12:00", monto: 1.00, estado: "Completado"},
+    {fecha: "2025-08-30T19:45:00", monto: 1.00, estado: "Pendiente"},
+    {fecha: "2025-08-29T11:30:00", monto: 2.30, estado: "Completado"},
+  ];
+
+  // Reemplaza tu función calcularIngresos() con esta:
+function calcularIngresos() {
+  // Valores exactos solicitados
+  const ingresosHoy = 92.00;
+  const ingresosSemana = 480.00;
+  const ingresosMes = 1230.00;
+
+  // Actualizar los valores en el HTML
+  document.getElementById("ingresosHoy").textContent = `Bs. ${ingresosHoy.toFixed(2)}`;
+  document.getElementById("ingresosSemana").textContent = `Bs. ${ingresosSemana.toFixed(2)}`;
+  document.getElementById("ingresosMes").textContent = `Bs. ${ingresosMes.toFixed(2)}`;
+}
+  function cargarTransacciones() {
+    const cont = document.getElementById("tablaTransacciones");
+    cont.innerHTML = "";
+    transaccionesSimuladas.forEach(tx => {
+      const fecha = new Date(tx.fecha);
+      cont.innerHTML += `
+        <div class="payment-row">
+          <span>${fecha.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
+          <span>Bs. ${tx.monto.toFixed(2)}</span>
+          <span>${tx.estado}</span>
+        </div>`;
+    });
+  }
+
+  function cargarGrafico() {
+    const ingresosPorDia = {};
+    transaccionesSimuladas.forEach(tx => {
+      const fecha = new Date(tx.fecha).toLocaleDateString();
+      ingresosPorDia[fecha] = (ingresosPorDia[fecha] || 0) + tx.monto;
+    });
+
+    const ctx = document.getElementById("incomeChart").getContext("2d");
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: Object.keys(ingresosPorDia),
+        datasets: [{
+          label: "Ingresos (Bs.)",
+          data: Object.values(ingresosPorDia),
+          borderColor: "#4CAF50",
+          backgroundColor: "rgba(76, 175, 80, 0.2)",
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: { plugins: { legend: { display:false } } }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    calcularIngresos();
+    cargarTransacciones();
+    cargarGrafico();
+  });
+</script>
+</body>
+</html>

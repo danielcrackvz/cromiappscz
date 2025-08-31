@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CROMI - Iniciar Sesión</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-large">CROMI</div>
+                <h1>Iniciar Sesión</h1>
+                <p>Accede a tu cuenta para continuar</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="usuario">Usuario o Email</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="remember">
+                        <span class="checkmark"></span>
+                        Recordarme
+                    </label>
+                    
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="btn-login-submit">Iniciar Sesión</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>¿No tienes una cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
+                <a href="index.html" class="back-home">← Volver al inicio</a>
+            </div>
+        </div>
+
+        <!-- Registro Form (Initially Hidden) -->
+        <div class="register-card" id="registerCard" style="display: none;">
+            <div class="login-header">
+                <div class="logo-large">CROMI</div>
+                <h1>Crear Cuenta</h1>
+                <p>Únete a la revolución del transporte</p>
+            </div>
+            
+            <form class="login-form" id="registerForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">Contraseña</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        Acepto los <a href="#">términos y condiciones</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-login-submit">Crear Cuenta</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>¿Ya tienes una cuenta? <a href="#" id="showLogin">Iniciar sesión</a></p>
+                <a href="index.html" class="back-home">← Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between login and register forms
+        const loginCard = document.querySelector('.login-card');
+        const registerCard = document.getElementById('registerCard');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginCard.style.display = 'none';
+            registerCard.style.display = 'block';
+        });
+
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+    
+            const usuario = document.getElementById('usuario').value;
+            const password = document.getElementById('password').value;
+    
+            // Simple validation (in a real app, this would be server-side)
+            if (usuario && password) {
+            // Simulate successful login
+            alert('¡Inicio de sesión exitoso!');
+            window.location.href = 'inicio.html';  // ← CAMBIADO AQUÍ
+            } else {
+            alert('Por favor, completa todos los campos');
+            }
+        });
+
+        // Handle register form submission
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const telefono = document.getElementById('telefono').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Validation
+            if (!nombre || !email || !telefono || !newPassword || !confirmPassword) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+            
+            if (!terms) {
+                alert('Debes aceptar los términos y condiciones');
+                return;
+            }
+            
+            // Simulate successful registration
+            alert('¡Cuenta creada exitosamente!');
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
